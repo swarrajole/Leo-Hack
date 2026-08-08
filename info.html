@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeonexAI Hack | Info</title>
+    <style>
+        :root {
+            --bg: #081119;
+            --panel: rgba(10, 23, 35, 0.88);
+            --line: rgba(116, 186, 255, 0.18);
+            --text: #edf5ff;
+            --muted: #90a7bc;
+            --accent: #2ad1a3;
+            --accent-2: #78b6ff;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Trebuchet MS", Verdana, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 15% 10%, rgba(42, 209, 163, 0.12), transparent 24%),
+                radial-gradient(circle at 85% 12%, rgba(120, 182, 255, 0.14), transparent 26%),
+                linear-gradient(180deg, #05090f, var(--bg));
+        }
+
+        .page {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 26px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            letter-spacing: -0.03em;
+        }
+
+        .links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .links a {
+            border: 1px solid var(--line);
+            background: rgba(7, 17, 26, 0.72);
+            color: var(--text);
+            border-radius: 999px;
+            padding: 10px 16px;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .intro {
+            color: var(--muted);
+            margin-top: 0;
+            margin-bottom: 22px;
+            line-height: 1.6;
+            max-width: 62rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 14px;
+        }
+
+        .attack-btn {
+            text-align: left;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--panel);
+            color: var(--text);
+            padding: 16px;
+            cursor: pointer;
+            transition: transform 140ms ease, border-color 140ms ease;
+        }
+
+        .attack-btn:hover {
+            transform: translateY(-2px);
+            border-color: rgba(120, 182, 255, 0.36);
+        }
+
+        .attack-btn strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 1.05rem;
+        }
+
+        .attack-btn span {
+            color: var(--muted);
+            line-height: 1.45;
+            font-size: 0.93rem;
+        }
+
+        .panel {
+            margin-top: 18px;
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            background: var(--panel);
+            padding: 20px;
+            min-height: 220px;
+        }
+
+        .panel h2 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .panel p {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .columns {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .col {
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 12px;
+            background: rgba(8, 20, 32, 0.58);
+        }
+
+        .col h3 {
+            margin: 0 0 8px;
+            font-size: 0.95rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        .col ul {
+            margin: 0;
+            padding-left: 18px;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .note {
+            margin-top: 14px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: rgba(42, 209, 163, 0.12);
+            border: 1px solid rgba(42, 209, 163, 0.28);
+            color: #c8ffe8;
+            font-size: 0.92rem;
+        }
+
+        @media (max-width: 980px) {
+            .columns { grid-template-columns: 1fr; }
+            .page { padding: 18px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <header class="topbar">
+            <h1>LeonexAI Hack Info Center</h1>
+            <div class="links">
+                <a href="/ai">AI</a>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/logout" id="logout-link">Logout</a>
+            </div>
+        </header>
+
+        <p class="intro">
+            Click any attack type to view high-level security information, common warning signs, and safe defensive examples.
+            This page is for awareness and blue-team hardening guidance.
+        </p>
+
+        <section class="grid" id="attack-grid"></section>
+
+        <section class="panel" id="detail-panel">
+            <h2>Select an attack type</h2>
+            <p>Details will appear here when you click any item above.</p>
+        </section>
+    </main>
+
+    <script>
+        const attackData = {{ attacks | tojson }};
+        const grid = document.getElementById('attack-grid');
+        const panel = document.getElementById('detail-panel');
+        const logoutLink = document.getElementById('logout-link');
+
+        function makeList(items) {
+            return `<ul>${items.map((item) => `<li>${item}</li>`).join('')}</ul>`;
+        }
+
+        function renderDetails(attack) {
+            panel.innerHTML = `
+                <h2>${attack.name}</h2>
+                <p>${attack.summary}</p>
+                <div class="columns">
+                    <div class="col">
+                        <h3>Warning Signs</h3>
+                        ${makeList(attack.warning_signs)}
+                    </div>
+                    <div class="col">
+                        <h3>Example Patterns</h3>
+                        ${makeList(attack.example_patterns)}
+                    </div>
+                    <div class="col">
+                        <h3>Defenses</h3>
+                        ${makeList(attack.defenses)}
+                    </div>
+                </div>
+                <div class="note">No offensive exploit code is provided. Examples are defensive detection patterns for awareness and hardening.</div>
+            `;
+        }
+
+        function renderGrid() {
+            grid.innerHTML = attackData.map((attack, idx) => `
+                <button class="attack-btn" data-idx="${idx}" type="button">
+                    <strong>${attack.name}</strong>
+                    <span>${attack.summary}</span>
+                </button>
+            `).join('');
+
+            grid.querySelectorAll('.attack-btn').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    const index = Number(btn.getAttribute('data-idx'));
+                    renderDetails(attackData[index]);
+                });
+            });
+        }
+
+        logoutLink.addEventListener('click', async (event) => {
+            event.preventDefault();
+            await fetch('/logout', { method: 'POST' });
+            window.location.href = '/login';
+        });
+
+        renderGrid();
+        if (attackData.length > 0) {
+            renderDetails(attackData[0]);
+        }
+    </script>
+</body>
+</html>

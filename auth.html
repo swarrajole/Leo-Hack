@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeonexAI Hack | Access</title>
+    <style>
+        :root {
+            --bg: #08121c;
+            --panel: rgba(11, 26, 40, 0.82);
+            --panel-border: rgba(105, 173, 255, 0.24);
+            --text: #e7f2ff;
+            --muted: #8ea8be;
+            --accent: #2ad1a3;
+            --accent-2: #6db7ff;
+            --danger: #ff7c7c;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+            background:
+                radial-gradient(circle at top left, rgba(42, 209, 163, 0.18), transparent 32%),
+                radial-gradient(circle at bottom right, rgba(109, 183, 255, 0.18), transparent 28%),
+                linear-gradient(135deg, #04090f, var(--bg));
+            color: var(--text);
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .shell {
+            width: min(980px, 100%);
+            display: grid;
+            grid-template-columns: 1.15fr 0.95fr;
+            border: 1px solid var(--panel-border);
+            border-radius: 28px;
+            overflow: hidden;
+            background: rgba(5, 14, 22, 0.72);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(18px);
+        }
+
+        .hero,
+        .panel {
+            padding: 40px;
+        }
+
+        .hero {
+            background: linear-gradient(180deg, rgba(109, 183, 255, 0.08), rgba(42, 209, 163, 0.04));
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 32px;
+        }
+
+        .kicker {
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-size: 0.76rem;
+            color: var(--accent);
+        }
+
+        h1 {
+            margin: 12px 0;
+            font-size: clamp(2.6rem, 6vw, 4.8rem);
+            line-height: 0.95;
+            font-weight: 700;
+        }
+
+        .lede {
+            max-width: 36rem;
+            color: var(--muted);
+            font-size: 1.04rem;
+            line-height: 1.7;
+        }
+
+        .points {
+            display: grid;
+            gap: 14px;
+        }
+
+        .point {
+            border: 1px solid rgba(109, 183, 255, 0.18);
+            border-radius: 16px;
+            padding: 16px 18px;
+            background: rgba(9, 20, 32, 0.48);
+        }
+
+        .point strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .panel {
+            background: var(--panel);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .panel h2 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.9rem;
+        }
+
+        .panel p {
+            color: var(--muted);
+            margin-bottom: 28px;
+        }
+
+        form {
+            display: grid;
+            gap: 16px;
+        }
+
+        label {
+            display: grid;
+            gap: 8px;
+            font-size: 0.94rem;
+        }
+
+        input {
+            width: 100%;
+            border: 1px solid rgba(109, 183, 255, 0.22);
+            background: rgba(4, 10, 16, 0.82);
+            color: var(--text);
+            padding: 14px 16px;
+            border-radius: 14px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--accent-2);
+            box-shadow: 0 0 0 3px rgba(109, 183, 255, 0.14);
+        }
+
+        button {
+            border: 0;
+            border-radius: 999px;
+            padding: 14px 20px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            color: #04121c;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .switcher {
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .switcher a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .status {
+            min-height: 24px;
+            color: var(--danger);
+            font-size: 0.92rem;
+        }
+
+        @media (max-width: 860px) {
+            .shell {
+                grid-template-columns: 1fr;
+            }
+
+            .hero,
+            .panel {
+                padding: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <section class="hero">
+            <div>
+                <div class="kicker">AI-Assisted Defense</div>
+                <h1>LeonexAI Hack</h1>
+                <p class="lede">
+                    A Python security command center for triaging suspicious events, clustering threat signals,
+                    and generating immediate defensive recommendations from raw telemetry.
+                </p>
+            </div>
+            <div class="points">
+                <div class="point">
+                    <strong>Rapid log triage</strong>
+                    Score auth, network, endpoint, web, cloud, and email events in seconds.
+                </div>
+                <div class="point">
+                    <strong>Batch analysis</strong>
+                    Process multi-line evidence, identify the highest-risk records, and store the history.
+                </div>
+                <div class="point">
+                    <strong>Action-first guidance</strong>
+                    Every assessment produces clear containment and hardening recommendations.
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <h2>{% if mode == 'register' %}Create analyst account{% else %}Welcome back{% endif %}</h2>
+            <p>{% if mode == 'register' %}Set up access to the dashboard and start analyzing defensive telemetry.{% else %}Sign in to review past assessments and analyze new security events.{% endif %}</p>
+            <form id="auth-form" method="post" novalidate>
+                <label>
+                    Username
+                    <input type="text" name="username" minlength="3" required>
+                </label>
+                <label>
+                    Password
+                    <input type="password" name="password" minlength="8" required>
+                </label>
+                <button type="submit">{% if mode == 'register' %}Register{% else %}Login{% endif %}</button>
+                <div class="status" id="status"></div>
+            </form>
+            <div class="switcher">
+                {% if mode == 'register' %}
+                    Already have an account? <a href="{{ url_for('show_login') }}">Login</a>
+                {% else %}
+                    Need an account? <a href="{{ url_for('register') }}">Register</a>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const form = document.getElementById('auth-form');
+        const statusNode = document.getElementById('status');
+        const target = {{ ('/register' if mode == 'register' else '/login') | tojson }};
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            statusNode.textContent = 'Working...';
+
+            const formData = new FormData(form);
+            const payload = Object.fromEntries(formData.entries());
+
+            let response;
+            let data;
+            try {
+                response = await fetch(target, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                    credentials: 'same-origin'
+                });
+                data = await response.json();
+            } catch (error) {
+                statusNode.textContent = 'Network error. Please try again.';
+                return;
+            }
+
+            if (!response.ok || !data.success) {
+                statusNode.textContent = data.message || 'Request failed.';
+                return;
+            }
+
+            if (target === '/register') {
+                statusNode.style.color = '#2ad1a3';
+                statusNode.textContent = 'Registration complete. Redirecting to login...';
+                window.setTimeout(() => {
+                    window.location.href = '/login';
+                }, 700);
+                return;
+            }
+
+            window.location.href = '/dashboard';
+        });
+    </script>
+</body>
+</html>

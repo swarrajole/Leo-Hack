@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeonexAI Hack | Dashboard</title>
+    <style>
+        :root {
+            --bg: #09111b;
+            --panel: rgba(10, 23, 35, 0.86);
+            --panel-2: rgba(13, 31, 47, 0.9);
+            --line: rgba(116, 186, 255, 0.16);
+            --text: #edf5ff;
+            --muted: #90a7bc;
+            --accent: #2ad1a3;
+            --accent-2: #78b6ff;
+            --critical: #ff6f6f;
+            --high: #ffae57;
+            --medium: #ffe082;
+            --low: #86efac;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Trebuchet MS", Verdana, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top, rgba(120, 182, 255, 0.12), transparent 26%),
+                linear-gradient(180deg, #05090f, var(--bg));
+        }
+
+        .page {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .title h1 {
+            margin: 0;
+            font-size: clamp(2rem, 5vw, 3.7rem);
+            letter-spacing: -0.04em;
+        }
+
+        .title p {
+            margin: 8px 0 0;
+            color: var(--muted);
+        }
+
+        .logout {
+            border: 1px solid var(--line);
+            background: rgba(7, 17, 26, 0.72);
+            color: var(--text);
+            border-radius: 999px;
+            padding: 12px 18px;
+            cursor: pointer;
+        }
+
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .top-link {
+            border: 1px solid var(--line);
+            background: rgba(7, 17, 26, 0.72);
+            color: var(--text);
+            border-radius: 999px;
+            padding: 12px 18px;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .hero-grid,
+        .content-grid {
+            display: grid;
+            gap: 18px;
+        }
+
+        .hero-grid {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            margin-bottom: 18px;
+        }
+
+        .content-grid {
+            grid-template-columns: 1.2fr 0.8fr;
+            align-items: start;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            padding: 22px;
+            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.28);
+        }
+
+        .metric span {
+            display: block;
+            color: var(--muted);
+            font-size: 0.84rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            margin-bottom: 14px;
+        }
+
+        .metric strong {
+            font-size: 2rem;
+        }
+
+        form {
+            display: grid;
+            gap: 14px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 0.3fr 1fr;
+            gap: 12px;
+        }
+
+        label {
+            display: grid;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        select,
+        textarea,
+        input[type="checkbox"] {
+            font: inherit;
+        }
+
+        select,
+        textarea {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--panel-2);
+            color: var(--text);
+            padding: 14px 16px;
+        }
+
+        textarea {
+            min-height: 220px;
+            resize: vertical;
+        }
+
+        .toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--muted);
+        }
+
+        button.primary {
+            border: 0;
+            border-radius: 999px;
+            padding: 14px 20px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            color: #05111c;
+            font-weight: 700;
+            cursor: pointer;
+            justify-self: start;
+        }
+
+        .summary {
+            display: grid;
+            gap: 12px;
+        }
+
+        .summary-item,
+        .history-item {
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 16px;
+            background: rgba(9, 20, 32, 0.5);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 5px 10px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .critical { background: rgba(255, 111, 111, 0.18); color: var(--critical); }
+        .high { background: rgba(255, 174, 87, 0.18); color: var(--high); }
+        .medium { background: rgba(255, 224, 130, 0.18); color: var(--medium); }
+        .low { background: rgba(134, 239, 172, 0.18); color: var(--low); }
+
+        .history {
+            display: grid;
+            gap: 12px;
+            max-height: 760px;
+            overflow: auto;
+        }
+
+        .history-item h4,
+        .summary-item h4 {
+            margin: 0 0 8px;
+        }
+
+        .history-item p,
+        .summary-item p,
+        .summary-item ul,
+        .history-item ul {
+            margin: 8px 0 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        ul {
+            padding-left: 18px;
+        }
+
+        .status {
+            min-height: 24px;
+            color: var(--muted);
+        }
+
+        @media (max-width: 1020px) {
+            .hero-grid,
+            .content-grid,
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="topbar">
+            <div class="title">
+                <h1>LeonexAI Hack</h1>
+                <p>{{ user.username }} is signed in. AI-assisted defensive analysis is active.</p>
+            </div>
+            <div class="topbar-actions">
+                <a class="top-link" href="/ai">AI</a>
+                <a class="top-link" href="/info">Info</a>
+                <button class="logout" id="logout-button">Logout</button>
+            </div>
+        </header>
+
+        <section class="hero-grid">
+            <article class="card metric"><span>Total Assessments</span><strong>{{ stats.total }}</strong></article>
+            <article class="card metric"><span>Critical</span><strong>{{ stats.critical }}</strong></article>
+            <article class="card metric"><span>High</span><strong>{{ stats.high }}</strong></article>
+            <article class="card metric"><span>Average Risk</span><strong>{{ stats.average_risk }}</strong></article>
+            <article class="card metric"><span>Top Category</span><strong style="font-size:1.2rem">{{ stats.top_category }}</strong></article>
+        </section>
+
+        <section class="content-grid">
+            <article class="card">
+                <h2>Analyze telemetry</h2>
+                <p style="color: var(--muted); margin-top: 0;">Paste a single event or enable batch mode to process multiple lines at once.</p>
+                <form id="analysis-form">
+                    <div class="row">
+                        <label>
+                            Event Type
+                            <select name="event_type">
+                                <option value="general">General</option>
+                                <option value="auth">Auth</option>
+                                <option value="network">Network</option>
+                                <option value="endpoint">Endpoint</option>
+                                <option value="web">Web</option>
+                                <option value="cloud">Cloud</option>
+                                <option value="email">Email</option>
+                            </select>
+                        </label>
+                        <label>
+                            Batch Mode
+                            <span class="toggle"><input type="checkbox" name="batch_mode"> Treat each non-empty line as a separate event</span>
+                        </label>
+                    </div>
+                    <label>
+                        Raw payload
+                        <textarea name="payload" placeholder="Example: failed login from 10.0.0.5 followed by union select probe"></textarea>
+                    </label>
+                    <button class="primary" type="submit">Run analysis</button>
+                    <div class="status" id="status"></div>
+                </form>
+
+                <div class="summary" id="summary-panel" style="margin-top: 18px;"></div>
+            </article>
+
+            <article class="card">
+                <h2>Recent assessments</h2>
+                <div class="history" id="history-panel">
+                    {% if assessments %}
+                        {% for item in assessments %}
+                            <div class="history-item">
+                                <div class="badge {{ item.severity }}">{{ item.severity }}</div>
+                                <h4>{{ item.primary_category }} · score {{ item.risk_score }}</h4>
+                                <p><strong style="color: var(--text);">{{ item.event_type }}</strong> · {{ item.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                                <p>{{ item.payload }}</p>
+                                <ul>
+                                    {% for finding in item.findings.split(' | ') %}
+                                        <li>{{ finding }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="history-item">
+                            <h4>No assessments yet</h4>
+                            <p>Run your first analysis to populate the defensive timeline.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </article>
+        </section>
+    </div>
+
+    <script>
+        const form = document.getElementById('analysis-form');
+        const statusNode = document.getElementById('status');
+        const summaryPanel = document.getElementById('summary-panel');
+        const historyPanel = document.getElementById('history-panel');
+        const logoutButton = document.getElementById('logout-button');
+
+        function renderList(items) {
+            return `<ul>${items.map((item) => `<li>${item}</li>`).join('')}</ul>`;
+        }
+
+        function renderResult(result) {
+            return `
+                <div class="summary-item">
+                    <div class="badge ${result.severity}">${result.severity}</div>
+                    <h4>${result.primary_category} · score ${result.risk_score}</h4>
+                    <p>Confidence: ${result.confidence}% · Kill chain stage: ${result.kill_chain_stage}</p>
+                    <p>MITRE tactics: ${result.mitre_tactics.length ? result.mitre_tactics.join(', ') : 'unclassified'}</p>
+                    <p>Matched signals: ${result.matched_signals.length ? result.matched_signals.join(', ') : 'none'}</p>
+                    <p>IOCs: ${Object.keys(result.iocs).length ? Object.entries(result.iocs).map(([k, v]) => `${k} (${v.length})`).join(', ') : 'none'}</p>
+                    <p>Observed: ${result.observed && result.observed.length ? result.observed.join(', ') : 'none'}</p>
+                    ${renderList(result.findings)}
+                    ${renderList(result.recommendations)}
+                </div>
+            `;
+        }
+
+        async function refreshHistory() {
+            const response = await fetch('/api/assessments');
+            const data = await response.json();
+            if (!data.success) {
+                return;
+            }
+
+            historyPanel.innerHTML = data.items.map((item) => `
+                <div class="history-item">
+                    <div class="badge ${item.severity}">${item.severity}</div>
+                    <h4>${item.primary_category} · score ${item.risk_score}</h4>
+                    <p><strong style="color: var(--text);">${item.event_type}</strong> · ${new Date(item.created_at).toLocaleString()}</p>
+                    <p>${item.payload}</p>
+                    ${renderList(item.findings)}
+                </div>
+            `).join('');
+        }
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            statusNode.textContent = 'Analyzing events...';
+
+            const formData = new FormData(form);
+            const payload = {
+                event_type: formData.get('event_type'),
+                payload: formData.get('payload'),
+                batch_mode: formData.get('batch_mode') === 'on'
+            };
+
+            const response = await fetch('/api/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                statusNode.textContent = data.message || 'Analysis failed.';
+                return;
+            }
+
+            statusNode.textContent = `Processed ${data.summary.events_processed} event(s). Highest risk: ${data.summary.max_risk}.`;
+            summaryPanel.innerHTML = `
+                <div class="summary-item">
+                    <h4>Run summary</h4>
+                    <p>Critical: ${data.summary.critical_events} · High: ${data.summary.high_events}</p>
+                    <p>Top categories: ${data.summary.top_categories.map((item) => `${item[0]} (${item[1]})`).join(', ') || 'none'}</p>
+                </div>
+            ` + data.results.map(renderResult).join('');
+            form.reset();
+            refreshHistory();
+        });
+
+        logoutButton.addEventListener('click', async () => {
+            await fetch('/logout', { method: 'POST' });
+            window.location.href = '/login';
+        });
+    </script>
+</body>
+</html>
